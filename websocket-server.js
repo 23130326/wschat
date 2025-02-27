@@ -15,11 +15,11 @@ const clients = new Set();
 wss.on('connection', function connection(ws) {
     // Client toevoegen aan de set
     clients.add(ws);
-    
-    console.log('Nieuwe client verbonden. Totaal aantal clients:', clients.size);
+    console.log('Gebruiker verbonden');
+    console.log('Aantal gebruikers verbonden:', clients.size);
     
     // Stuur een welkomstbericht naar de nieuwe client
-    ws.send('Welkom bij de chat!');
+    ws.send('Welkom!');
     
     // Bericht ontvangen van client
     ws.on('message', function incoming(message) {
