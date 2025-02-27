@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #chat-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+        #message-form {
+            display: flex;
+        }
+        #message-input {
+            flex-grow: 1;
+            padding: 8px;
+            margin-right: 10px;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 5px;
+        }
+        .received {
+            background-color: #e3f2fd;
+        }
+        .sent {
+            background-color: #e8f5e9;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Chat</h1>
+    <div id="connection-status">Verbinden met server...</div>
+    <div id="chat-container"></div>
+    <form id="message-form">
+        <input type="text" id="message-input" placeholder="Typ een bericht..." autocomplete="off">
+        <button type="submit">Verstuur</button>
+    </form>
+
+    <script>
+        // DOM elementen
+        const connectionStatus = document.getElementById('connection-status');
+        const chatContainer = document.getElementById('chat-container');
+        const messageForm = document.getElementById('message-form');
+        const messageInput = document.getElementById('message-input');
+        
+        // WebSocket verbinding maken
+        const socket = new WebSocket('ws://localhost:8080');
+        
+        // Verbinding gemaakt
+        socket.onopen = function() {
+            connectionStatus.textContent = 'Status: verbonden';
+            connectionStatus.style.color = 'green';
+        };
+        
+        // Bericht ontvangen
+        socket.onmessage = function(event) {
+            const message = event.data;
+            addMessageToChat(message, 'received');
+        };
+        
+        // Verbinding gesloten
+        socket.onclose = function() {
+            connectionStatus.textContent = 'Verbinding verbroken';
+            connectionStatus.style.color = 'red';
+        };
+        
+        // Verbindingsfout
+        socket.onerror = function(error) {
+            connectionStatus.textContent = 'Fout in de verbinding';
+            connectionStatus.style.color = 'red';
+            console.error('WebSocket fout:', error);
+        };
+        
+        // Formulier afhandelen
+        messageForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const message = messageInput.value.trim();
+            
+            if (message && socket.readyState === WebSocket.OPEN) {
+                socket.send(message);
+                addMessageToChat(message, 'sent');
+                messageInput.value = '';
+            }
+        });
+        
+        // Bericht toevoegen aan de chat
+        function addMessageToChat(message, type) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', type);
+            messageElement.textContent = message;
+            chatContainer.appendChild(messageElement);
+            
+            // Automatisch scrollen naar nieuwste bericht
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    </script>
+</body>
+</html>
