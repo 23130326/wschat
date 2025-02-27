@@ -19,7 +19,7 @@ wss.on('connection', function connection(ws) {
     console.log('Aantal gebruikers verbonden:', clients.size);
     
     // Stuur een welkomstbericht naar de nieuwe client
-    ws.send('Welkom!');
+    ws.send('welkom!');
     
     // Bericht ontvangen van client
     ws.on('message', function incoming(message) {

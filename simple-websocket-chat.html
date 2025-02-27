@@ -12,8 +12,8 @@
     <div id="connection-status">Verbinden met server...</div>
     <div id="chat-container"></div>
     <form id="message-form">
-        <input type="text" id="message-input" placeholder="Typ een bericht..." autocomplete="off">
-        <button type="submit">Verstuur</button>
+        <input type="text" id="message-input" placeholder="typ een bericht" autocomplete="off">
+        <button type="submit">verstuur</button>
     </form>
 
     <script>
@@ -28,7 +28,7 @@
         
         // Verbinding gemaakt
         socket.onopen = function() {
-            connectionStatus.textContent = 'Status: verbonden';
+            connectionStatus.textContent = 'status: verbonden';
             connectionStatus.style.color = 'green';
         };
         
